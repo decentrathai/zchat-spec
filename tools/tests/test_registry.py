@@ -256,7 +256,8 @@ class Areas(SpecCase):
                           ("backend", "package.json"), ("backend", "**/package-lock.json"),
                           ("backend", "apps/backend/src/**"), ("ios", "Packages/**")]:
             with self.subTest(pattern=pat):
-                self.refused("area", "exempt", "--platform", plat, "--pattern", pat, "--reason", "test exemption")
+                self.refused("area", "exempt", "--platform", plat, "--pattern", pat, "--reason",
+                             "a long enough reason for rule 38", says="cannot be exempt")
 
     def test_test_and_harness_patterns_accepted(self):
         for plat, pat in [("android", "**/src/test/**"), ("android", "**/src/androidTest/**"),
