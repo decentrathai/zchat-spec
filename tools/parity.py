@@ -33,8 +33,11 @@ RELEASE_CLASSES = ("internal", "outward")
 TRUNK = "trunk"
 HOME = Path(os.environ.get("HOME", "/home/yourt"))
 DEFAULT_SPEC = HOME / "zchat-spec"
-DEFAULT_LOCK = HOME / ".config/zchat-qa/locks/parity.lock"
 DEFAULT_WAIVERS = [HOME / "zchat-evidence/pm/WAIVERS.md", HOME / "zchat-evidence/pm/WAIVERS_IOS.md"]
+
+
+def default_lock():
+    return HOME / ".config/zchat-qa/locks/parity.lock"
 NORMATIVE = ("PARITY.json", "areas.json", "releases.json", "exceptions.json")
 VIEW = "PARITY.md"
 LOG = "PARITY.log"
@@ -106,7 +109,7 @@ NEVER_EXEMPT_PROBES = [
     "apps/backend/scripts/migrate.ts", "package.json", "apps/backend/package.json", "package-lock.json",
     "apps/backend/package-lock.json", "pnpm-lock.yaml", "yarn.lock",
 ]
-TEST_SOURCE_SET = re.compile(r"^(test|androidTest|[A-Za-z0-9]*Test|testFixtures)$")
+TEST_SOURCE_SET = re.compile(r"^(test|androidTest|testFixtures|[A-Za-z0-9]*Test|\*Test)$")
 
 
 def never_exempt_reason(pattern):
@@ -481,12 +484,21 @@ def approvals_missing(state):
 
 
 class Lock:
+    """The registry lock. An injected path (ZCHAT_PARITY_LOCK, tests) may be created; the default lives in another
+    session's protected tree and is only opened read-only if it already exists, never created."""
+
     def __init__(self):
-        self.path = Path(os.environ.get("ZCHAT_PARITY_LOCK") or DEFAULT_LOCK)
+        self.injected = bool(os.environ.get("ZCHAT_PARITY_LOCK"))
+        self.path = Path(os.environ.get("ZCHAT_PARITY_LOCK") or default_lock())
 
     def __enter__(self):
         need(self.path.parent.is_dir(), "the lock directory %s does not exist" % self.path.parent)
-        self.fh = open(self.path, "a")
+        if self.injected:
+            self.fh = open(self.path, "a")
+        else:
+            need(self.path.is_file(), "the registry lock %s does not exist; the tool never creates it there "
+                 "(it is the Android session's tree: ask over the mailbox)" % self.path)
+            self.fh = open(self.path, "r")
         fcntl.flock(self.fh, fcntl.LOCK_EX)
         return self
 
