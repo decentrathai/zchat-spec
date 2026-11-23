@@ -1,0 +1,25 @@
+# Plan F.1 parity: the spec repo's own tool tests on every push and PR (GitHub Free Linux minutes only).
+name: parity
+on:
+  push:
+    branches: [trunk, "p0-**", "p1-**"]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: parity-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  tool:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Parity tool tests
+        run: |
+          git config --global user.email ci@example.invalid
+          git config --global user.name ci
+          python3 -m unittest discover -s tools/tests -v 2>&1 | tail -40
+        shell: bash -o pipefail {0}
