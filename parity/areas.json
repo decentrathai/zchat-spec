@@ -151,6 +151,10 @@
      "reason": "tests, harness, docs or own checks (plan D.4)"
     },
     {
+     "pattern": ".github/workflows/core-linux.yml",
+     "reason": "tests, harness, docs or own checks (plan D.4)"
+    },
+    {
      "pattern": ".gitignore",
      "reason": "tests, harness, docs or own checks (plan D.4)"
     },
