@@ -39,6 +39,10 @@
    {
     "class": "outward",
     "version": "1.0.0"
+   },
+   {
+    "class": "outward",
+    "version": "1.1.0"
    }
   ]
  },
