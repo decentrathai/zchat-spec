@@ -8,6 +8,10 @@
    {
     "class": "outward",
     "version": "2.13.1"
+   },
+   {
+    "class": "outward",
+    "version": "2.13.2"
    }
   ],
   "backend": [],
