@@ -126,6 +126,11 @@
      "tier": "local"
     },
     {
+     "area": "keys",
+     "pattern": "Packages/ZChatPlatform/Sources/KeyStore/**",
+     "tier": "hard"
+    },
+    {
      "area": "ui",
      "pattern": "Packages/ZChatUI/Sources/**",
      "tier": "mixed"
