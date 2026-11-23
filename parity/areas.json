@@ -16,6 +16,11 @@
      "tier": "hard"
     },
     {
+     "area": "nostr",
+     "pattern": "Packages/ZChatCore/Sources/ZChatNostr/**",
+     "tier": "hard"
+    },
+    {
      "area": "zmsg",
      "pattern": "Packages/ZChatCore/Sources/ZChatProtocol/**",
      "tier": "hard"

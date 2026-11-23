@@ -14,3 +14,4 @@
 {"args":{"platform":"android","version":"2.13.0"},"at":"2026-11-23T16:33:48+01:00","by":"ios-session","op":"baseline","seq":14}
 {"args":{"area":"zmsg","pattern":"Packages/ZChatCore/Sources/ZChatProtocol/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:48+01:00","by":"ios-session","op":"area-set","seq":15}
 {"args":{"area":"crypto","pattern":"Packages/ZChatCore/Sources/ZChatCrypto/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:48+01:00","by":"ios-session","op":"area-set","seq":16}
+{"args":{"area":"nostr","pattern":"Packages/ZChatCore/Sources/ZChatNostr/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:48+01:00","by":"ios-session","op":"area-set","seq":17}
