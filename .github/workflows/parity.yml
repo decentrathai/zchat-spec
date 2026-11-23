@@ -1,9 +1,9 @@
-# Plan F.1 parity: the spec repo's own tool tests on every push and PR (GitHub Free Linux minutes only).
+# Plan F.1 parity: the spec repo's own tool tests on every push to trunk (GitHub Free Linux minutes only; owner
+# 23 Nov 2026: no GitHub charge). Not on p0-** or PRs: a fast-forward of trunk ran the same commit twice.
 name: parity
 on:
   push:
-    branches: [trunk, "p0-**", "p1-**"]
-  pull_request:
+    branches: [trunk]
 permissions:
   contents: read
 concurrency:
