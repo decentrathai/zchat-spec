@@ -809,6 +809,42 @@ def coverage(spec, platform, repo):
     return files, [p for p in files if classify(state, platform, p)[0] is None]
 
 
+def sync(spec, repo, pin):
+    """Write `pin` to <repo>/parity/SPEC_PIN and stage that path only; every check runs before any write. Never
+    commits. Every git call strips REPO_VARS, on the clone side and on the tree side."""
+    need(isinstance(pin, str) and PIN_RE.match(pin), "--pin %r is not a full 40- or 64-hex spec commit id" % (pin,))
+    rc, out = git_raw(repo, "rev-parse", "--show-toplevel", spec_side=True)
+    top = out.decode("utf-8", "surrogateescape").strip()
+    need(rc == 0 and top and Path(top).resolve() == Path(repo).resolve(),
+         "%s is not the top of a git work tree" % repo)
+    need(spec.is_dir(), "no spec clone at %s" % spec)
+    rc, out = git_raw(spec, "cat-file", "-t", pin, spec_side=True)
+    need(rc == 0 and out.strip() == b"commit", "the spec clone %s holds no commit %s (fetch the spec)" % (spec, pin))
+    rc, _ = git_raw(spec, "merge-base", "--is-ancestor", pin, "refs/heads/" + TRUNK, spec_side=True)
+    need(rc == 0, "%s is not reachable from the spec's %s: only a %s commit can be pinned" % (pin, TRUNK, TRUNK))
+    load_at(spec, pin)
+    f = Path(repo) / PIN_FILE
+    old = f.read_bytes() if f.exists() else None
+    if old is not None:
+        cur = old.decode("utf-8", "replace").strip()
+        need(PIN_RE.match(cur), "%s holds %r, not a full spec commit id: the pin cannot be judged for moving back"
+             % (PIN_FILE, cur))
+        rc, out = git_raw(spec, "cat-file", "-t", cur, spec_side=True)
+        need(rc == 0 and out.strip() == b"commit",
+             "the spec clone %s does not hold the current pin %s (fetch the spec)" % (spec, cur))
+        rc, _ = git_raw(spec, "merge-base", "--is-ancestor", pin, cur, spec_side=True)
+        need(rc != 0 or pin == cur, "%s is an ancestor of the current pin %s: the pin never moves back" % (pin, cur))
+    f.parent.mkdir(parents=True, exist_ok=True)
+    f.write_bytes((pin + "\n").encode("ascii"))
+    rc, _ = git_raw(repo, "add", "--", PIN_FILE, spec_side=True)
+    if rc != 0:
+        if old is None:
+            f.unlink()
+        else:
+            f.write_bytes(old)
+        raise ParityError("git add %s failed in %s" % (PIN_FILE, repo))
+
+
 # ---------------------------------------------------------------- the command line
 
 def kv(values, what):
@@ -885,8 +921,22 @@ def main(argv=None):
         p.add_argument("--platform", required=True)
         p.add_argument("--repo", required=True)
     cc.add_argument("--msg-file", required=True)
+    sy = sp.add_parser("sync", help="write and stage --repo's parity/SPEC_PIN (never commits)")
+    sy.add_argument("--repo", required=True)
+    sy.add_argument("--pin", required=True)
     ns = ap.parse_args(argv)
     spec = Path(ns.spec)
+
+    if ns.cmd == "sync":
+        try:  # every failure blocks, and nothing in --repo changes
+            sync(spec, Path(ns.repo), ns.pin)
+            print("SYNC OK %s" % ns.pin)
+            return 0
+        except ParityError as e:
+            print("BLOCKED: %s" % e)
+        except Exception as e:  # noqa: BLE001
+            print("BLOCKED: cannot sync (%s: %s)" % (type(e).__name__, e))
+        return 1
 
     if ns.cmd == "check-commit":
         try:  # every failure to judge blocks (fails closed)
