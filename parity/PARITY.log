@@ -6,3 +6,4 @@
 {"args":{"class":"internal","platform":"ios","version":"0.1.0"},"at":"2026-11-23T16:33:47+01:00","by":"ios-session","op":"release-add","seq":6}
 {"args":{"class":"internal","platform":"ios","version":"0.2.0"},"at":"2026-11-23T16:33:47+01:00","by":"ios-session","op":"release-add","seq":7}
 {"args":{"class":"internal","platform":"ios","version":"0.3.0"},"at":"2026-11-23T16:33:48+01:00","by":"ios-session","op":"release-add","seq":8}
+{"args":{"class":"internal","platform":"ios","version":"0.9.0"},"at":"2026-11-23T16:33:48+01:00","by":"ios-session","op":"release-add","seq":9}
