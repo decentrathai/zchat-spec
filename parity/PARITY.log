@@ -41,3 +41,4 @@
 {"args":{"pattern":"Packages/*/Tests/**","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":41}
 {"args":{"pattern":"App/Tests/**","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":42}
 {"args":{"pattern":"Tests/**","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":43}
+{"args":{"pattern":"tools/qa/**","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":44}
