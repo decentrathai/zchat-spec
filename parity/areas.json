@@ -9,7 +9,13 @@
    "exempt": []
   },
   "ios": {
-   "areas": [],
+   "areas": [
+    {
+     "area": "zmsg",
+     "pattern": "Packages/ZChatCore/Sources/ZChatProtocol/**",
+     "tier": "hard"
+    }
+   ],
    "exempt": []
   }
  },
