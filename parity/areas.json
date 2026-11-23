@@ -11,6 +11,11 @@
   "ios": {
    "areas": [
     {
+     "area": "ai",
+     "pattern": "Packages/ZChatCore/Sources/ZChatAI/**",
+     "tier": "hard"
+    },
+    {
      "area": "crypto",
      "pattern": "Packages/ZChatCore/Sources/ZChatCrypto/**",
      "tier": "hard"

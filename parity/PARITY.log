@@ -17,3 +17,4 @@
 {"args":{"area":"nostr","pattern":"Packages/ZChatCore/Sources/ZChatNostr/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:48+01:00","by":"ios-session","op":"area-set","seq":17}
 {"args":{"area":"groups","pattern":"Packages/ZChatCore/Sources/ZChatGroups/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:48+01:00","by":"ios-session","op":"area-set","seq":18}
 {"args":{"area":"money","pattern":"Packages/ZChatCore/Sources/ZChatMoney/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":19}
+{"args":{"area":"ai","pattern":"Packages/ZChatCore/Sources/ZChatAI/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":20}
