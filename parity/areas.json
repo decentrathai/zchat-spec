@@ -11,6 +11,11 @@
   "ios": {
    "areas": [
     {
+     "area": "build",
+     "pattern": "Packages/*/Package.swift",
+     "tier": "hard"
+    },
+    {
      "area": "ai",
      "pattern": "Packages/ZChatCore/Sources/ZChatAI/**",
      "tier": "hard"
