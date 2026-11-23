@@ -62,3 +62,4 @@
 {"args":{"area":"keys","pattern":"Packages/ZChatPlatform/Sources/KeyStore/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:52:10+01:00","by":"ios-session","op":"area-set","seq":62}
 {"args":{"area":"probe","pattern":"Packages/ZChatCore/Sources/zchat-probe/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:52:10+01:00","by":"ios-session","op":"area-set","seq":63}
 {"args":{"area":"ci","pattern":".github/workflows/core-macos.yml","platform":"ios","tier":"hard"},"at":"2026-11-23T16:52:10+01:00","by":"ios-session","op":"area-set","seq":64}
+{"args":{"area":"ci","pattern":".github/workflows/app-macos.yml","platform":"ios","tier":"hard"},"at":"2026-11-23T16:52:10+01:00","by":"ios-session","op":"area-set","seq":65}
