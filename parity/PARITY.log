@@ -56,3 +56,4 @@
 {"args":{"pattern":".swiftlint.yml","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:52+01:00","by":"ios-session","op":"area-exempt","seq":56}
 {"args":{"pattern":".github/workflows/core-linux.yml","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:52+01:00","by":"ios-session","op":"area-exempt","seq":57}
 {"args":{"pattern":".github/workflows/parity.yml","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:52+01:00","by":"ios-session","op":"area-exempt","seq":58}
+{"args":{"pattern":"SPEC_PIN","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:52+01:00","by":"ios-session","op":"area-exempt","seq":59}

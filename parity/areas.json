@@ -199,6 +199,10 @@
      "reason": "tests, harness, docs or own checks (plan D.4)"
     },
     {
+     "pattern": "SPEC_PIN",
+     "reason": "tests, harness, docs or own checks (plan D.4)"
+    },
+    {
      "pattern": "Tests/**",
      "reason": "tests, harness, docs or own checks (plan D.4)"
     },
