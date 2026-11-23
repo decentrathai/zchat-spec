@@ -141,7 +141,12 @@
      "tier": "hard"
     }
    ],
-   "exempt": []
+   "exempt": [
+    {
+     "pattern": "Packages/*/Tests/**",
+     "reason": "tests, harness, docs or own checks (plan D.4)"
+    }
+   ]
   }
  },
  "schema": 1
