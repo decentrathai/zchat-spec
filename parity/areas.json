@@ -1,0 +1,17 @@
+{
+ "platforms": {
+  "android": {
+   "areas": [],
+   "exempt": []
+  },
+  "backend": {
+   "areas": [],
+   "exempt": []
+  },
+  "ios": {
+   "areas": [],
+   "exempt": []
+  }
+ },
+ "schema": 1
+}
