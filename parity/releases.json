@@ -35,6 +35,10 @@
    {
     "class": "internal",
     "version": "0.9.0"
+   },
+   {
+    "class": "outward",
+    "version": "1.0.0"
    }
   ]
  },

@@ -5,5 +5,5 @@ Per-platform state here is what the registry alone says. Proven at a commit is c
 | Id | Kind | Area | Title | Android | iOS | Backend |
 |---|---|---|---|---|---|---|
 
-Releases: android 2.13.0, 2.13.1, 2.13.2, 2.14.0; ios 0.1.0, 0.2.0, 0.3.0, 0.9.0; backend none
+Releases: android 2.13.0, 2.13.1, 2.13.2, 2.14.0; ios 0.1.0, 0.2.0, 0.3.0, 0.9.0, 1.0.0; backend none
 
