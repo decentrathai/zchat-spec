@@ -12,6 +12,11 @@
    "areas": [
     {
      "area": "build",
+     "pattern": "**/*.entitlements",
+     "tier": "hard"
+    },
+    {
+     "area": "build",
      "pattern": "**/*.xcconfig",
      "tier": "hard"
     },
