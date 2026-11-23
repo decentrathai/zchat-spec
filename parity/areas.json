@@ -39,6 +39,11 @@
      "area": "zmsg",
      "pattern": "Packages/ZChatCore/Sources/ZChatProtocol/**",
      "tier": "hard"
+    },
+    {
+     "area": "restore",
+     "pattern": "Packages/ZChatCore/Sources/ZChatRestore/**",
+     "tier": "hard"
     }
    ],
    "exempt": []
