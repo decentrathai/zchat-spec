@@ -101,6 +101,11 @@
      "tier": "local"
     },
     {
+     "area": "wallet",
+     "pattern": "Packages/ZChatWallet/Sources/**",
+     "tier": "hard"
+    },
+    {
      "area": "build",
      "pattern": "project.yml",
      "tier": "hard"
