@@ -118,7 +118,7 @@
     {
      "area": "probe",
      "pattern": "Packages/ZChatCore/Sources/zchat-probe/**",
-     "tier": "local"
+     "tier": "hard"
     },
     {
      "area": "platform",
