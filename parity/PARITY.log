@@ -36,3 +36,4 @@
 {"args":{"area":"ui","pattern":"Packages/ZChatUI/Sources/**","platform":"ios","tier":"mixed"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":36}
 {"args":{"area":"app","pattern":"App/**","platform":"ios","tier":"local"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":37}
 {"args":{"area":"extensions","pattern":"Extensions/**","platform":"ios","tier":"local"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":38}
+{"args":{"area":"release","pattern":".github/workflows/archive.yml","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":39}

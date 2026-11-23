@@ -31,6 +31,11 @@
      "tier": "hard"
     },
     {
+     "area": "release",
+     "pattern": ".github/workflows/archive.yml",
+     "tier": "hard"
+    },
+    {
      "area": "build",
      "pattern": ".xcode-version",
      "tier": "hard"
