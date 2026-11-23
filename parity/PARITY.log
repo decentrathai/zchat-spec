@@ -47,3 +47,4 @@
 {"args":{"pattern":"CLAUDE.md","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":47}
 {"args":{"pattern":"REVIEW.md","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":48}
 {"args":{"pattern":"docs/**","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":49}
+{"args":{"pattern":"parity/**","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":50}
