@@ -24,3 +24,4 @@
 {"args":{"area":"build","pattern":"Packages/*/Package.swift","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":24}
 {"args":{"area":"build","pattern":"Packages/*/Package.resolved","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":25}
 {"args":{"area":"build","pattern":"Package.swift","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":26}
+{"args":{"area":"build","pattern":"Package.resolved","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":27}
