@@ -44,6 +44,11 @@
      "area": "restore",
      "pattern": "Packages/ZChatCore/Sources/ZChatRestore/**",
      "tier": "hard"
+    },
+    {
+     "area": "store",
+     "pattern": "Packages/ZChatCore/Sources/ZChatStore/**",
+     "tier": "hard"
     }
    ],
    "exempt": []
