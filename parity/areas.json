@@ -36,6 +36,11 @@
      "tier": "hard"
     },
     {
+     "area": "ci",
+     "pattern": ".github/workflows/core-macos.yml",
+     "tier": "hard"
+    },
+    {
      "area": "release",
      "pattern": ".github/workflows/upload.yml",
      "tier": "hard"
