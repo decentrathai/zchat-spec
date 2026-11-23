@@ -74,6 +74,11 @@
      "area": "probe",
      "pattern": "Packages/ZChatCore/Sources/zchat-probe/**",
      "tier": "local"
+    },
+    {
+     "area": "build",
+     "pattern": "project.yml",
+     "tier": "hard"
     }
    ],
    "exempt": []
