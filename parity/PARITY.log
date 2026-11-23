@@ -33,3 +33,4 @@
 {"args":{"area":"texts","pattern":"**/*.xcstrings","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":33}
 {"args":{"area":"wallet","pattern":"Packages/ZChatWallet/Sources/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":34}
 {"args":{"area":"platform","pattern":"Packages/ZChatPlatform/Sources/**","platform":"ios","tier":"local"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":35}
+{"args":{"area":"ui","pattern":"Packages/ZChatUI/Sources/**","platform":"ios","tier":"mixed"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":36}
