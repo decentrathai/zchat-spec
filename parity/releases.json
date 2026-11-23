@@ -19,7 +19,12 @@
    }
   ],
   "backend": [],
-  "ios": []
+  "ios": [
+   {
+    "class": "internal",
+    "version": "0.1.0"
+   }
+  ]
  },
  "schema": 1
 }
