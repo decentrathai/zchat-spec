@@ -21,6 +21,11 @@
      "tier": "hard"
     },
     {
+     "area": "money",
+     "pattern": "Packages/ZChatCore/Sources/ZChatMoney/**",
+     "tier": "hard"
+    },
+    {
      "area": "nostr",
      "pattern": "Packages/ZChatCore/Sources/ZChatNostr/**",
      "tier": "hard"
