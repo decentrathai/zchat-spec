@@ -1,4 +1,26 @@
 {
- "items": [],
+ "items": [
+  {
+   "area": "build",
+   "id": "PAR-0001",
+   "kind": "behaviour",
+   "platforms": {
+    "android": null,
+    "backend": null,
+    "ios": {
+     "cases": [],
+     "due": "0.1.0",
+     "register": "IOSP-13",
+     "tests": []
+    }
+   },
+   "source": [
+    "plan-C.2",
+    "plan-C.4"
+   ],
+   "supersedes": null,
+   "title": "ZChatCore Swift package skeleton: Swift 6, strict concurrency, builds and tests on Linux"
+  }
+ ],
  "schema": 1
 }
