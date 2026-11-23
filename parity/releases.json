@@ -1,6 +1,11 @@
 {
  "platforms": {
-  "android": [],
+  "android": [
+   {
+    "class": "outward",
+    "version": "2.13.0"
+   }
+  ],
   "backend": [],
   "ios": []
  },
