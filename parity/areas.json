@@ -36,6 +36,11 @@
      "tier": "hard"
     },
     {
+     "area": "app",
+     "pattern": "App/**",
+     "tier": "local"
+    },
+    {
      "area": "build",
      "pattern": "Package.resolved",
      "tier": "hard"
