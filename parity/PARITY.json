@@ -20,6 +20,35 @@
    ],
    "supersedes": null,
    "title": "ZChatCore Swift package skeleton: Swift 6, strict concurrency, builds and tests on Linux"
+  },
+  {
+   "area": "zmsg",
+   "id": "PAR-0002",
+   "kind": "wire",
+   "platforms": {
+    "android": {
+     "cases": [
+      "zmsg/envelope.json#*"
+     ],
+     "due": "2.13.0",
+     "register": null,
+     "tests": []
+    },
+    "backend": null,
+    "ios": {
+     "cases": [
+      "zmsg/envelope.json#*"
+     ],
+     "due": "0.1.0",
+     "register": "IOSP-14",
+     "tests": []
+    }
+   },
+   "source": [
+    "ios/census/CENSUS1_WIRE_v2.13.0.md"
+   ],
+   "supersedes": null,
+   "title": "ZMSG envelope: prefixes, memo chunking and reassembly, parse order as Android 2.13.0"
   }
  ],
  "schema": 1
