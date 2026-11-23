@@ -147,6 +147,10 @@
      "reason": "tests, harness, docs or own checks (plan D.4)"
     },
     {
+     "pattern": "AGENTS.md",
+     "reason": "tests, harness, docs or own checks (plan D.4)"
+    },
+    {
      "pattern": "App/Tests/**",
      "reason": "tests, harness, docs or own checks (plan D.4)"
     },
