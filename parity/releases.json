@@ -22,6 +22,10 @@
    {
     "class": "outward",
     "version": "2026.12"
+   },
+   {
+    "class": "outward",
+    "version": "2027.01"
    }
   ],
   "ios": [
