@@ -39,3 +39,4 @@
 {"args":{"area":"release","pattern":".github/workflows/archive.yml","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":39}
 {"args":{"area":"release","pattern":".github/workflows/upload.yml","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-set","seq":40}
 {"args":{"pattern":"Packages/*/Tests/**","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":41}
+{"args":{"pattern":"App/Tests/**","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:51+01:00","by":"ios-session","op":"area-exempt","seq":42}
