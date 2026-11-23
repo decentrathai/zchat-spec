@@ -101,6 +101,11 @@
      "tier": "local"
     },
     {
+     "area": "platform",
+     "pattern": "Packages/ZChatPlatform/Sources/**",
+     "tier": "local"
+    },
+    {
      "area": "wallet",
      "pattern": "Packages/ZChatWallet/Sources/**",
      "tier": "hard"
