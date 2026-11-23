@@ -12,6 +12,11 @@
    "areas": [
     {
      "area": "build",
+     "pattern": "**/*.xcconfig",
+     "tier": "hard"
+    },
+    {
+     "area": "build",
      "pattern": ".xcode-version",
      "tier": "hard"
     },
