@@ -22,6 +22,11 @@
     },
     {
      "area": "build",
+     "pattern": "**/Info.plist",
+     "tier": "hard"
+    },
+    {
+     "area": "build",
      "pattern": ".xcode-version",
      "tier": "hard"
     },

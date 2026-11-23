@@ -29,3 +29,4 @@
 {"args":{"area":"build","pattern":".xcode-version","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":29}
 {"args":{"area":"build","pattern":"**/*.xcconfig","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":30}
 {"args":{"area":"build","pattern":"**/*.entitlements","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":31}
+{"args":{"area":"build","pattern":"**/Info.plist","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:50+01:00","by":"ios-session","op":"area-set","seq":32}
