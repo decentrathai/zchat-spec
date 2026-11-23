@@ -12,6 +12,11 @@
    "areas": [
     {
      "area": "build",
+     "pattern": "Packages/*/Package.resolved",
+     "tier": "hard"
+    },
+    {
+     "area": "build",
      "pattern": "Packages/*/Package.swift",
      "tier": "hard"
     },

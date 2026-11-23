@@ -22,3 +22,4 @@
 {"args":{"area":"store","pattern":"Packages/ZChatCore/Sources/ZChatStore/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":22}
 {"args":{"area":"probe","pattern":"Packages/ZChatCore/Sources/zchat-probe/**","platform":"ios","tier":"local"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":23}
 {"args":{"area":"build","pattern":"Packages/*/Package.swift","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":24}
+{"args":{"area":"build","pattern":"Packages/*/Package.resolved","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":25}
