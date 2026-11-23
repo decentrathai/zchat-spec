@@ -52,3 +52,4 @@
 {"args":{"pattern":"LICENSE","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:52+01:00","by":"ios-session","op":"area-exempt","seq":52}
 {"args":{"pattern":".gitignore","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:52+01:00","by":"ios-session","op":"area-exempt","seq":53}
 {"args":{"pattern":".gitattributes","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:52+01:00","by":"ios-session","op":"area-exempt","seq":54}
+{"args":{"pattern":".swift-format","platform":"ios","reason":"tests, harness, docs or own checks (plan D.4)"},"at":"2026-11-23T16:33:52+01:00","by":"ios-session","op":"area-exempt","seq":55}
