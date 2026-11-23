@@ -41,6 +41,11 @@
      "tier": "local"
     },
     {
+     "area": "extensions",
+     "pattern": "Extensions/**",
+     "tier": "local"
+    },
+    {
      "area": "build",
      "pattern": "Package.resolved",
      "tier": "hard"
