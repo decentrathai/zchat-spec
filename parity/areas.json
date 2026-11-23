@@ -12,6 +12,11 @@
    "areas": [
     {
      "area": "build",
+     "pattern": ".xcode-version",
+     "tier": "hard"
+    },
+    {
+     "area": "build",
      "pattern": "Package.resolved",
      "tier": "hard"
     },
