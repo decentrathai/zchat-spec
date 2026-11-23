@@ -49,6 +49,11 @@
      "area": "store",
      "pattern": "Packages/ZChatCore/Sources/ZChatStore/**",
      "tier": "hard"
+    },
+    {
+     "area": "probe",
+     "pattern": "Packages/ZChatCore/Sources/zchat-probe/**",
+     "tier": "local"
     }
    ],
    "exempt": []

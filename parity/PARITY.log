@@ -20,3 +20,4 @@
 {"args":{"area":"ai","pattern":"Packages/ZChatCore/Sources/ZChatAI/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":20}
 {"args":{"area":"restore","pattern":"Packages/ZChatCore/Sources/ZChatRestore/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":21}
 {"args":{"area":"store","pattern":"Packages/ZChatCore/Sources/ZChatStore/**","platform":"ios","tier":"hard"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":22}
+{"args":{"area":"probe","pattern":"Packages/ZChatCore/Sources/zchat-probe/**","platform":"ios","tier":"local"},"at":"2026-11-23T16:33:49+01:00","by":"ios-session","op":"area-set","seq":23}
