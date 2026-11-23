@@ -171,6 +171,10 @@
      "reason": "tests, harness, docs or own checks (plan D.4)"
     },
     {
+     "pattern": "docs/**",
+     "reason": "tests, harness, docs or own checks (plan D.4)"
+    },
+    {
      "pattern": "tools/qa/**",
      "reason": "tests, harness, docs or own checks (plan D.4)"
     }
