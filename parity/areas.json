@@ -21,6 +21,11 @@
      "tier": "hard"
     },
     {
+     "area": "texts",
+     "pattern": "**/*.xcstrings",
+     "tier": "hard"
+    },
+    {
      "area": "build",
      "pattern": "**/Info.plist",
      "tier": "hard"
