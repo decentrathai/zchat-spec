@@ -2,6 +2,9 @@
 """parity.py: the registry tool of the ZChat cross-platform parity rule (W-236; plan D.2, D.3, D.12, annex A6).
 
 Step P0, slice A: init, release add, area set|exempt, add, baseline, except, validate [--approvals], render, show.
+Step P0, slice B: check-commit (the commit-msg hook's judge), coverage, and classify(), the default-deny
+classification. Both commands read the registry at the tree's parity/SPEC_PIN from git objects, never from the clone's
+working tree, and fail closed.
 
 How it holds together:
 - parity/PARITY.log is the only source. Every normative file (PARITY.json, areas.json, releases.json, exceptions.json),
@@ -420,8 +423,12 @@ def read_log(spec):
     path = spec / "parity" / LOG
     if not path.exists():
         return []
+    return parse_log(path.read_text(encoding="utf-8"))
+
+
+def parse_log(text):
     out = []
-    for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+    for n, line in enumerate(text.splitlines(), 1):
         try:
             e = json.loads(line)
         except ValueError:
@@ -445,22 +452,22 @@ def replay(entries):
 
 def compare(spec, state):
     """Every rendered file equals the file on disk, and parity/releases/ holds nothing else."""
-    want = render(state)
-    bad = []
-    for rel, text in want.items():
-        f = spec / "parity" / rel
+    def read(rel):
         try:
-            if f.read_bytes() != text.encode("utf-8"):
-                bad.append(rel)
+            return (spec / "parity" / rel).read_bytes()
         except OSError:
-            bad.append(rel)
+            return None
     rdir = spec / "parity" / "releases"
-    if rdir.is_dir():
-        for f in sorted(rdir.rglob("*")):
-            rel = f.relative_to(spec / "parity").as_posix()
-            if f.is_file() and rel not in want:
-                bad.append(rel)
-    return bad
+    have = [f.relative_to(spec / "parity").as_posix() for f in sorted(rdir.rglob("*")) if f.is_file()] \
+        if rdir.is_dir() else []
+    return compare_with(state, read, have)
+
+
+def compare_with(state, read, release_files):
+    """`read(rel)` gives the bytes of parity/<rel> or None; `release_files` lists what parity/releases/ holds."""
+    want = render(state)
+    bad = [rel for rel, text in want.items() if read(rel) != text.encode("utf-8")]
+    return bad + [rel for rel in release_files if rel not in want]
 
 
 def load(spec):
@@ -546,6 +553,262 @@ def write_op(spec, op, args, summary):
         return args
 
 
+# ---------------------------------------------------------------- slice B: classification, check-commit, coverage
+
+EMPTY_TREE = "4b825dc642cb6eb9a060e54bf8d69288fbee4904"
+PIN_FILE = "parity/SPEC_PIN"
+PIN_RE = re.compile(r"^(?:[0-9a-f]{40}|[0-9a-f]{64})$")
+VENDORED = ("parity/testdata/", "parity/runner/")
+# The tool's own fixed test rule (annex A7, plus the iOS test roots). It only names an exempt match "test"; a path
+# that matches it and no exempt pattern stays unclassified.
+TEST_PATTERNS = ("**/src/test/**", "**/src/androidTest/**", "**/src/*Test/**", "Tests/**", "tools/qa/tests/**",
+                 "Packages/*/Tests/**", "App/Tests/**")
+SKIP_MARKERS = ("XCTSkip", ".disabled(", "withKnownIssue")
+ITEMS_RE = re.compile(r"^PAR-\d{4,}(?:\s*,\s*PAR-\d{4,})*$")
+SYNC_RE = re.compile(r"^sync\s+[0-9a-f]{7,64}\.\.[0-9a-f]{7,64}$")
+# What a git hook exports for the repo being committed; a call into the spec clone must not inherit it.
+REPO_VARS = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+             "GIT_COMMON_DIR", "GIT_PREFIX")
+
+
+def git_raw(where, *args, spec_side=False):
+    """(exit code, stdout bytes). Bytes, so a blob compares exactly (text mode would fold \\r\\n)."""
+    env = dict(os.environ, GIT_NO_REPLACE_OBJECTS="1")
+    if spec_side:
+        for k in REPO_VARS:
+            env.pop(k, None)
+    r = subprocess.run(["git", "-C", str(where), *args], env=env, capture_output=True)
+    return r.returncode, r.stdout
+
+
+def blob(where, spec_path, spec_side=False):
+    """The bytes of `<rev>:<path>` (or `:<path>`, the index), None when there is no such blob."""
+    rc, out = git_raw(where, "cat-file", "blob", spec_path, spec_side=spec_side)
+    return out if rc == 0 else None
+
+
+def zsplit(out):
+    return [p for p in out.decode("utf-8", "surrogateescape").split("\0") if p]
+
+
+def is_test_path(path):
+    return any(gmatch(p, path) for p in TEST_PATTERNS)
+
+
+def classify(state, platform, path):
+    """(tier, area) for an area match (the highest tier when several match), ("test"|"exempt", pattern) for an
+    exempt match, (None, None) when nothing of `platform`'s lists matches (default deny)."""
+    lists = state["areas"].get(platform) or {"areas": [], "exempt": []}
+    hits = [e for e in lists["areas"] if gmatch(e["pattern"], path)]
+    if hits:
+        best = max(hits, key=lambda e: (TIERS.index(e["tier"]), e["pattern"]))
+        return best["tier"], best["area"]
+    for e in lists["exempt"]:
+        if gmatch(e["pattern"], path):
+            return ("test" if is_test_path(path) else "exempt"), e["pattern"]
+    return None, None
+
+
+def is_shipped(state, iid, plat):
+    return any(iid in s["proven"] for s in state["snapshots"].values() if s["platform"] == plat)
+
+
+def exception_of(state, iid, plat):
+    ex = [e for e in state["exceptions"] if e["item"] == iid and e["platform"] == plat]
+    return ex[0] if ex else None
+
+
+def read_pin(raw, where):
+    need(raw is not None, "%s has no %s: every checked commit pins the spec commit it is judged by (run "
+         "`parity.py sync`, or restore the file)" % (where, PIN_FILE))
+    return raw.decode("utf-8", "replace").strip()
+
+
+def load_at(spec, pin):
+    """The registry at spec commit `pin`, from git objects only: replayed and compared like `validate`."""
+    need(spec.is_dir(), "no spec clone at %s (clone the spec; the check fails closed)" % spec)
+    need(PIN_RE.match(pin), "%s holds %r, not a full spec commit id" % (PIN_FILE, pin))
+    rc, out = git_raw(spec, "cat-file", "-t", pin, spec_side=True)
+    need(rc == 0 and out.strip() == b"commit",
+         "the spec clone %s does not hold the pinned commit %s (fetch the spec, or fix %s)" % (spec, pin, PIN_FILE))
+
+    def read(rel):
+        return blob(spec, "%s:parity/%s" % (pin, rel), spec_side=True)
+    log = read(LOG)
+    need(log is not None, "the spec at pin %s has no parity/%s" % (pin[:12], LOG))
+    state = replay(parse_log(log.decode("utf-8")))
+    rc, out = git_raw(spec, "ls-tree", "-r", "--name-only", "-z", pin, "--", "parity/releases/", spec_side=True)
+    need(rc == 0, "cannot list parity/releases/ at pin %s" % pin[:12])
+    bad = compare_with(state, read, [p[len("parity/"):] for p in zsplit(out)])
+    need(not bad, "the registry at pin %s does not equal its log replay: %s" % (pin[:12], ", ".join(bad)))
+    return state
+
+
+def staged_changes(repo):
+    """(base, [(status, old, new)]): the index against HEAD (the empty tree before the first commit). `old` is None
+    for an added file, `new` None for a deleted one; a rename or copy gives both names."""
+    rc, out = git_raw(repo, "rev-parse", "-q", "--verify", "HEAD^{commit}")
+    base = out.decode().strip() if rc == 0 else EMPTY_TREE
+    rc, out = git_raw(repo, "diff-index", "--cached", "-M", "--name-status", "-z", base, "--")
+    need(rc == 0, "cannot read the staged changes of %s" % repo)
+    f, out, i = zsplit(out), [], 0
+    while i < len(f):
+        st = f[i][0]
+        if st in "RC":
+            out.append((st, f[i + 1], f[i + 2]))
+            i += 3
+        else:
+            out.append((st, None if st == "A" else f[i + 1], None if st == "D" else f[i + 1]))
+            i += 2
+    return base, out
+
+
+def parity_trailer(text):
+    """The value of the one `Parity:` line, None when there is none. Lines starting with '#' are dropped, as git does."""
+    vals = [m.group(1).strip() for m in (re.match(r"^Parity:\s*(.*)$", line) for line in text.splitlines()
+                                         if not line.startswith("#")) if m]
+    need(len(vals) <= 1, "more than one Parity line: name every item in one `Parity: PAR-n, PAR-m`")
+    return vals[0] if vals else None
+
+
+# A named test is SwiftPM's `<Target>.<Type>/<method>`; Swift Testing ids carry `()` or argument labels after the
+# method, which are dropped. `func <method>` is the declaration in both XCTest and Swift Testing (`@Test func`).
+def parse_test(name):
+    m = re.match(r"^(?:([^./]+)\.)?(?:([^/]+)/)?([^/(]+)(?:\(.*\))?$", name)
+    if not m:
+        return None
+    target, typ, method = m.groups()
+    return target, typ.split(".")[-1] if typ else None, method
+
+
+def func_decl(text, method):
+    return re.search(r"\bfunc\s+" + re.escape(method) + r"(?![A-Za-z0-9_])", text)
+
+
+def holds(text, path, t):
+    target, typ, method = t
+    if target and "/%s/" % target not in "/" + path:
+        return False
+    if typ and not re.search(r"\b(?:class|struct|actor|enum|extension)\s+" + re.escape(typ) + r"\b", text):
+        return False
+    return func_decl(text, method) is not None
+
+
+def has_test_attr(text, method):
+    """Swift Testing: the `@Test` attribute between the previous declaration and `func <method>`."""
+    m = func_decl(text, method)
+    head = text[:m.start()]
+    cut = max(head.rfind("}"), head.rfind("{"), head.rfind("func "))
+    return "@Test" in head[cut + 1:]
+
+
+def markers(text):
+    return sum(text.count(s) for s in SKIP_MARKERS)
+
+
+def named_test_problem(state, platform, repo, base, changes):
+    named = []
+    for iid in sorted(state["items"]):
+        side = state["items"][iid]["platforms"].get(platform)
+        for name in (side or {}).get("tests", []):
+            t = parse_test(name)
+            if t:
+                named.append((iid, name, t))
+    if not named:
+        return None
+    for st, old, new in changes:
+        if old is None:
+            continue
+        raw = blob(repo, "%s:%s" % (base, old))
+        if raw is None:
+            continue
+        before = raw.decode("utf-8", "replace")
+        raw = blob(repo, ":" + new) if new else None
+        after = raw.decode("utf-8", "replace") if raw is not None else None
+        for iid, name, t in named:
+            if not holds(before, old, t):
+                continue
+            if after is None or not holds(after, new, t):
+                what = "deletes or renames"
+            elif markers(after) > markers(before) or (has_test_attr(before, t[2]) and not has_test_attr(after, t[2])):
+                what = "disables"
+            else:
+                continue
+            return ("this commit %s %s's named test %s (in %s). A test an item names stays, runs and keeps its name; "
+                    "change the item first (`parity.py change`, step P1)" % (what, iid, name, old))
+    return None
+
+
+def check_commit(spec, platform, repo, text):
+    """None when the staged commit may be made, else ParityError(why). The order is the test file's contract."""
+    need(platform in PLATFORMS, "unknown platform %r" % platform)
+    pin = read_pin(blob(repo, ":" + PIN_FILE), "the staged tree")
+    state = load_at(spec, pin)
+    base, changes = staged_changes(repo)
+    paths = sorted({p for _, o, n in changes for p in (o, n) if p})
+    trailer = parity_trailer(text)
+    vend = [p for p in paths if p.startswith(VENDORED)]
+    need(not vend or (trailer is not None and SYNC_RE.match(trailer)),
+         "a change to the vendored files %s: they change only through `parity.py sync` (trailer `Parity: sync "
+         "<old>..<new>`); restore them" % ", ".join(vend))
+    for st, old, new in changes:
+        if st in "ARC" and classify(state, platform, new)[0] is None:
+            raise ParityError("%s has no area and is on no exempt list of %s at the pin (default deny): classify it "
+                              "with `parity.py area set` or `area exempt` in the spec, then sync" % (new, platform))
+    why = named_test_problem(state, platform, repo, base, changes)
+    need(why is None, why)
+    hits = {}
+    for p in paths:
+        cls, name = classify(state, platform, p)
+        if cls in TIERS:
+            hits[name] = cls
+    if not hits:
+        return "no area hit (test and exempt paths only)"
+    hit_text = ", ".join("%s (%s)" % (a, hits[a]) for a in sorted(hits))
+    need(trailer is not None, "no Parity trailer; this commit hits %s. Add `Parity: PAR-n[, PAR-m]` naming the "
+         "items these changes belong to (parity/PARITY.md at the pin), or add an item first" % hit_text)
+    need(not trailer.startswith("n/a"), "`Parity: n/a` is refused on product paths in step P0; this commit hits %s: "
+         "name an item, or add one (kind refactor for a change without behaviour)" % hit_text)
+    need(not SYNC_RE.match(trailer), "a `Parity: sync` commit changes parity/ only; this one hits %s" % hit_text)
+    need(ITEMS_RE.match(trailer), "the Parity trailer %r is not `PAR-n[, PAR-m]`" % trailer)
+    ids = [i.strip() for i in trailer.split(",")]
+    unknown = [i for i in ids if i not in state["items"]]
+    need(not unknown, "unknown item %s at the staged pin %s (an item added to the spec later needs `parity.py sync` "
+         "first)" % (", ".join(unknown), pin[:12]))
+    covered = {state["items"][i]["area"] for i in ids}
+    missing = sorted(set(hits) - covered)
+    need(not missing, "%s does not cover %s: name an item of each area hit" % (", ".join(ids), ", ".join(missing)))
+    for iid in ids:
+        it = state["items"][iid]
+        side = it["platforms"][platform]
+        need(side is not None, "%s is null on %s: it cannot exist here, so it cannot carry this change" % (iid, platform))
+        ex = exception_of(state, iid, platform)
+        need(ex is None, "%s is excepted on %s (%s, to %s): an excepted item carries no change"
+             % (iid, platform, ex and ex["waiver"], ex and ex["last_release"]))
+        need(not is_shipped(state, iid, platform),
+             "%s has shipped on %s: a shipped behaviour is changed through `parity.py change` (step P1)" % (iid, platform))
+        for p in PLATFORMS:
+            s = it["platforms"][p]
+            if p == platform or s is None or is_shipped(state, iid, p) or exception_of(state, iid, p):
+                continue
+            nxt = next_releases(state, p)
+            need(s["due"] in nxt and s["register"],
+                 "%s: the %s side is open with due %s, which is not among %s's next releases (%s): give %s a due "
+                 "release and a register id, or an exception, before this change lands"
+                 % (iid, p, s["due"], p, ", ".join(nxt) or "none", p))
+    return "%s cover %s" % (", ".join(ids), hit_text)
+
+
+def coverage(spec, platform, repo):
+    """The unclassified files of `repo`'s HEAD, judged at HEAD's pin."""
+    need(platform in PLATFORMS, "unknown platform %r" % platform)
+    state = load_at(spec, read_pin(blob(repo, "HEAD:" + PIN_FILE), "HEAD"))
+    rc, out = git_raw(repo, "ls-tree", "-r", "--name-only", "-z", "HEAD")
+    need(rc == 0, "cannot list the files of %s at HEAD" % repo)
+    files = zsplit(out)
+    return files, [p for p in files if classify(state, platform, p)[0] is None]
+
+
 # ---------------------------------------------------------------- the command line
 
 def kv(values, what):
@@ -616,8 +879,37 @@ def main(argv=None):
     sp.add_parser("render")
     sh = sp.add_parser("show")
     sh.add_argument("item")
+    cc = sp.add_parser("check-commit", help="judge the staged commit of --repo (the commit-msg hook)")
+    cv = sp.add_parser("coverage", help="every file of --repo's HEAD is classified")
+    for p in (cc, cv):
+        p.add_argument("--platform", required=True)
+        p.add_argument("--repo", required=True)
+    cc.add_argument("--msg-file", required=True)
     ns = ap.parse_args(argv)
     spec = Path(ns.spec)
+
+    if ns.cmd == "check-commit":
+        try:  # every failure to judge blocks (fails closed)
+            text = Path(ns.msg_file).read_text(encoding="utf-8")
+            print("PARITY PASS: %s" % check_commit(spec, ns.platform, Path(ns.repo), text))
+            return 0
+        except ParityError as e:
+            print("BLOCKED: %s" % e)
+        except Exception as e:  # noqa: BLE001
+            print("BLOCKED: cannot judge the commit (%s: %s)" % (type(e).__name__, e))
+        return 1
+    if ns.cmd == "coverage":
+        try:
+            files, bad = coverage(spec, ns.platform, Path(ns.repo))
+        except Exception as e:  # noqa: BLE001
+            print("COVERAGE FAIL: cannot judge (%s)" % e)
+            return 1
+        if bad:
+            print("COVERAGE FAIL: %d of %d files of %s have no area and no exempt pattern:\n  %s"
+                  % (len(bad), len(files), ns.platform, "\n  ".join(bad)))
+            return 1
+        print("COVERAGE OK: %d files classified" % len(files))
+        return 0
 
     try:
         if ns.cmd == "validate":
