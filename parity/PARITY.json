@@ -69,6 +69,26 @@
    ],
    "supersedes": null,
    "title": "iOS app shell T0-pre: XcodeGen project.yml, one SwiftUI app target (iOS 17, no extension, no entitlements), a diagnostics screen running the ZChatCore self-checks; installs on the owner's iPhone from Xcode with a personal team"
+  },
+  {
+   "area": "app",
+   "id": "PAR-0004",
+   "kind": "behaviour",
+   "platforms": {
+    "android": null,
+    "backend": null,
+    "ios": {
+     "cases": [],
+     "due": "0.1.0",
+     "register": "IOSP-18",
+     "tests": []
+    }
+   },
+   "source": [
+    "plan-M2c"
+   ],
+   "supersedes": null,
+   "title": "iOS app shell T0-pre: SwiftUI entry point and the diagnostics screen listing the ZChatCore self-checks (no network, no storage)"
   }
  ],
  "schema": 1
