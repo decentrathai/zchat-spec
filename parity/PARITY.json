@@ -49,6 +49,26 @@
    ],
    "supersedes": null,
    "title": "ZMSG envelope: prefixes, memo chunking and reassembly, parse order as Android 2.13.0"
+  },
+  {
+   "area": "build",
+   "id": "PAR-0003",
+   "kind": "behaviour",
+   "platforms": {
+    "android": null,
+    "backend": null,
+    "ios": {
+     "cases": [],
+     "due": "0.1.0",
+     "register": "IOSP-18",
+     "tests": []
+    }
+   },
+   "source": [
+    "plan-M2c"
+   ],
+   "supersedes": null,
+   "title": "iOS app shell T0-pre: XcodeGen project.yml, one SwiftUI app target (iOS 17, no extension, no entitlements), a diagnostics screen running the ZChatCore self-checks; installs on the owner's iPhone from Xcode with a personal team"
   }
  ],
  "schema": 1

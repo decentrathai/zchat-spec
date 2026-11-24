@@ -6,6 +6,7 @@ Per-platform state here is what the registry alone says. Proven at a commit is c
 |---|---|---|---|---|---|---|
 | PAR-0001 | behaviour | build | ZChatCore Swift package skeleton: Swift 6, strict concurrency, builds and tests on Linux | null | due 0.1.0, IOSP-13 | null |
 | PAR-0002 | wire | zmsg | ZMSG envelope: prefixes, memo chunking and reassembly, parse order as Android 2.13.0 | shipped | due 0.1.0, IOSP-14 | null |
+| PAR-0003 | behaviour | build | iOS app shell T0-pre: XcodeGen project.yml, one SwiftUI app target (iOS 17, no extension, no entitlements), a diagnostics screen running the ZChatCore self-checks; installs on the owner's iPhone from Xcode with a personal team | null | due 0.1.0, IOSP-18 | null |
 
 Releases: android 2.13.0, 2.13.1, 2.13.2, 2.14.0; ios 0.1.0, 0.2.0, 0.3.0, 0.9.0, 1.0.0, 1.1.0; backend 2026.12, 2027.01
 
